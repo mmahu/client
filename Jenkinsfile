@@ -6,7 +6,6 @@ pipeline {
                 script {
                     name = "e-clent"
                     port = "80:80"
-                    gatewayPort = "9090:9090"
                     registry = "master:5000"
                     buildNumber = "1.0.$BUILD_NUMBER"
                 }
@@ -30,7 +29,6 @@ pipeline {
                     --name ${name} \
                     --no-resolve-image \
                     --publish ${port} \
-                    --publish ${gatewayPort} \
                     ${registry}/${name}:${buildNumber}"
             }
         }
