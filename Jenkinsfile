@@ -4,7 +4,7 @@ pipeline {
         stage('init') {
             steps {
                 script {
-                    name = "e-clent"
+                    name = "e-client"
                     port = "80:80"
                     registry = "master:5000"
                     buildNumber = "1.0.$BUILD_NUMBER"
