@@ -18,7 +18,7 @@ pipeline {
         }
         stage('imaging') {
             steps {
-                sh "docker buildx build --platform=linux/arm/v8 . -t ${registry}/${name}:${buildNumber} --load"
+                sh "docker buildx build --platform=linux/arm64 . -t ${registry}/${name}:${buildNumber} --load"
                 sh "docker push ${registry}/${name}"
             }
         }
@@ -29,6 +29,11 @@ pipeline {
                     --name ${name} \
                     --publish ${port} \
                     ${registry}/${name}:${buildNumber}"
+            }
+        }
+        stage('clean up') {
+            steps {
+                sh "docker image prune --all -f"
             }
         }
     }
