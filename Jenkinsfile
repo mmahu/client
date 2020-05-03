@@ -18,7 +18,7 @@ pipeline {
         }
         stage('imaging') {
             steps {
-                sh "docker build . -t ${registry}/${name}:${buildNumber}"
+                sh "docker buildx build --platform=linux/arm/v8 . -t ${registry}/${name}:${buildNumber} --load"
                 sh "docker push ${registry}/${name}"
             }
         }
@@ -27,7 +27,6 @@ pipeline {
                 sh "docker service rm ${name} || true"
                 sh "docker service create \
                     --name ${name} \
-                    --no-resolve-image \
                     --publish ${port} \
                     ${registry}/${name}:${buildNumber}"
             }
