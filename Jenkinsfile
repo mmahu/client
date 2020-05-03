@@ -6,7 +6,7 @@ pipeline {
                 script {
                     name = "e-client"
                     port = "80:80"
-                    registry = "master:5000"
+                    registry = "192.168.0.19:5000"
                     buildNumber = "1.0.$BUILD_NUMBER"
                 }
             }
