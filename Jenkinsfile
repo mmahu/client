@@ -6,7 +6,7 @@ pipeline {
                 script {
                     name = "e-client"
                     port = "80:80"
-                    registry = "192.168.0.19:5000"
+                    registry = "192.168.0.25:5000"
                     buildNumber = "1.0.$BUILD_NUMBER"
                 }
             }
@@ -16,9 +16,16 @@ pipeline {
                 git url: 'https://github.com/mmahu/client.git', branch: 'master'
             }
         }
+        stage('build') {
+            steps {
+                sh 'chmod +x gradlew'
+                sh "echo ${buildNumber}"
+                sh "./gradlew clean assemble -PbuildNumber=${buildNumber} -Dorg.gradle.java.home=/usr/local/jdk-11"
+            }
+        }
         stage('imaging') {
             steps {
-                sh "docker buildx build --platform=linux/arm64 . -t ${registry}/${name}:${buildNumber} --load"
+                sh "docker build . -t ${registry}/${name}:${buildNumber}"
                 sh "docker push ${registry}/${name}"
             }
         }
@@ -29,11 +36,6 @@ pipeline {
                     --name ${name} \
                     --publish ${port} \
                     ${registry}/${name}:${buildNumber}"
-            }
-        }
-        stage('clean up') {
-            steps {
-                sh "docker image prune --all -f"
             }
         }
     }
