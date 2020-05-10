@@ -16,13 +16,6 @@ pipeline {
                 git url: 'https://github.com/mmahu/client.git', branch: 'master'
             }
         }
-        stage('build') {
-            steps {
-                sh 'chmod +x gradlew'
-                sh "echo ${buildNumber}"
-                sh "./gradlew clean assemble -PbuildNumber=${buildNumber} -Dorg.gradle.java.home=/usr/local/jdk-11"
-            }
-        }
         stage('imaging') {
             steps {
                 sh "docker build . -t ${registry}/${name}:${buildNumber}"
